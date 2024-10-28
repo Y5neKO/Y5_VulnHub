@@ -1,0 +1,3 @@
+url: /seeyon/management/index.jsp
+
+通用密码WLCCYBD@SEEYON
